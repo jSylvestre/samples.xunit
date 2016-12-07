@@ -14,14 +14,16 @@ using Xunit.Sdk;
 [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "This attribute is designed as an extensibility point.")]
 public class AssumeIdentityAttribute : BeforeAfterTestAttribute
 {
+    private readonly string _identityName;
     IPrincipal originalPrincipal;
 
     /// <summary>
     /// Replaces the identity of the current thread with <paramref name="roleName"/>.
     /// </summary>
     /// <param name="roleName">The role's name</param>
-    public AssumeIdentityAttribute(string roleName)
+    public AssumeIdentityAttribute(string roleName, string identityName = "xUnit")
     {
+        _identityName = identityName;
         Name = roleName;
     }
 
@@ -47,7 +49,7 @@ public class AssumeIdentityAttribute : BeforeAfterTestAttribute
     public override void Before(MethodInfo methodUnderTest)
     {
         originalPrincipal = Thread.CurrentPrincipal;
-        var identity = new GenericIdentity("xUnit");
+        var identity = new GenericIdentity(_identityName);       
         var principal = new GenericPrincipal(identity, new string[] { Name });
         Thread.CurrentPrincipal = principal;
     }

@@ -9,6 +9,14 @@ public class AssumeIdentityAttributeTests
     public static void AttributeChangesRoleInTestMethod()
     {
         Assert.True(Thread.CurrentPrincipal.IsInRole("casper"));
+        Assert.True(Thread.CurrentPrincipal.Identity.Name == "xUnit");
+    }
+
+    [Fact, AssumeIdentity("casper", "jcs")]
+    public static void AttributeChangesRoleInTestMethod2()
+    {
+        Assert.True(Thread.CurrentPrincipal.IsInRole("casper"));
+        Assert.True(Thread.CurrentPrincipal.Identity.Name == "jcs");
     }
 
     [Fact]
